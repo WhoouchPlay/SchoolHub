@@ -18,4 +18,4 @@ class Resource(models.Model):
     desription = models.TextField(verbose_name="Опис", null=True, blank=True, default=None)
 
     def __str__(self):
-        return f"{self.name}: {self.type}|{self.location.name}"
+        return f"{self.name}: {self.type} | {self.location.name}"

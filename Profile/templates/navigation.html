@@ -1,18 +1,21 @@
+{% with request.resolver_match.url_name as url_name %}
 <li class="nav-item">
-    <a class="nav-link active" href="{% url 'index' %}">SchoolHub</a>
+    <a class="nav-link {% if url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">SchoolHub</a>
 </li>
+
 {% if request.user.is_authenticated %}
 <li class="nav-item">
-    <a class="nav-link" href="{% url 'profile' %}">Профіль</a>
+    <a class="nav-link {% if url_name == 'profile' %} active {% endif %}" href="{% url 'profile' %}">Профіль</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="{% url 'logout_view' %}">Вихід</a>
+    <a class="nav-link {% if url_name == 'logout_view' %} active {% endif %}" href="{% url 'logout_view' %}">Вихід</a>
 </li>
 {% else %}
 <li class="nav-item">
-    <a class="nav-link" href="{% url 'sign_in' %}">Вхід</a>
+    <a class="nav-link {% if url_name == 'sign_in' %} active {% endif %}" href="{% url 'sign_in' %}">Вхід</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link" href="{% url 'sign_up' %}">Зареєструватися</a>
+    <a class="nav-link {% if url_name == 'sign_up' %} active {% endif %}" href="{% url 'sign_up' %}">Зареєструватися</a>
 </li>
 {% endif %}
+{% endwith %}   

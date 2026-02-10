@@ -50,12 +50,12 @@ class SubjectForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        exclude = ['user']
+        exclude = ['user', 'positions', 'class_room']
 
 
 class SignInForm(forms.Form):
     username = forms.CharField(max_length=50, min_length=3, help_text="Введіть логін", label="Логін")
-    password1 = forms.CharField(
+    password = forms.CharField(
         help_text="Введіть пароль",
         label="Пароль",
         widget=forms.PasswordInput
