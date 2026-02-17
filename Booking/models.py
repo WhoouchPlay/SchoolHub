@@ -9,8 +9,8 @@ class Status(models.Model):
     name = models.CharField(max_length=50)
     verbose_name = models.CharField(max_length=100)
 
-def __str__(self):
-    return f"{self.name} - {self.verbose_name}"
+    def __str__(self):
+        return f"{self.name} - {self.verbose_name}"
 
 
 class Booking(models.Model):
