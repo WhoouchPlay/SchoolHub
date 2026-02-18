@@ -1,3 +1,5 @@
+{% load permissions %}
+
 {% with request.resolver_match.url_name as url_name %}
 <li class="nav-item">
     <a class="nav-link {% if url_name == 'index' %}active{% endif %}" href="{% url 'index' %}">SchoolHub</a>
@@ -6,12 +8,16 @@
 <li class="nav-item">
     <a class="nav-link {% if url_name == 'profile' %} active {% endif %}" href="{% url 'profile' %}">Профіль</a>
 </li>
+{% if request.user|has_permission:"CB"%}
 <li class="nav-item">
     <a class="nav-link {% if url_name == 'create_book' %} active {% endif %}" href="{% url 'create_book' %}">Забронювати кабінет</a>
 </li>
+{% endif %}
+{% if request.user|has_permission:"RB"%}
 <li class="nav-item">
     <a class="nav-link {% if url_name == 'resource' %} active {% endif %}" href="{% url 'resource' %}">Список бронювань</a>
 </li>
+{% endif %}
 <li class="nav-item">
     <a class="nav-link {% if url_name == 'logout' %} active {% endif %}" href="{% url 'logout_view' %}">Вихід</a>
 </li>

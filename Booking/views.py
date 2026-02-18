@@ -8,17 +8,13 @@ from django.core.exceptions import PermissionDenied
 from .forms import BookingFormAdmin, BookingFormUser
 from Profile.models import Position, Action
 from .models import Booking, Status
-
+from .permissions import has_permission
 # Create your views here.
 
 
+@has_permission("CB")
 @login_required
 def create_book(request: HttpRequest):
-    if not request.user.profile.positions.filter(actions__name="CB").exists():
-        # raise PermissionDenied
-        messages.error(request, "У Вас недостатньо прав 🤷")
-        return redirect("resource")
-    
     form = BookingFormUser(data=request.POST or None)
     if form.is_valid():
         book: Booking = form.save(commit=False)
@@ -30,13 +26,9 @@ def create_book(request: HttpRequest):
     return render(request, "booking_user.html", dict(form=form))
 
 
+@has_permission("UB")
 @login_required
 def update_book(request: HttpRequest, id: int):
-    positions = Position.objects.filter(actions__name="UB").all()
-    if not any(position in request.user.profile.positions.all() for position in positions):
-        messages.error(request, "У Вас недостатньо прав")
-        return redirect("resource")
-    
     form = BookingFormAdmin(data=request.POST or None, instance=Booking.objects.get(pk=id))
     if form.is_valid():
         form.save()
@@ -45,6 +37,7 @@ def update_book(request: HttpRequest, id: int):
     return render(request, "booking_admin.html", dict(form=form))
 
 
+@has_permission("RB")
 @login_required
 def resources(request: HttpRequest):
     return render(request, "Resource.html", dict(booking=Booking.objects.all()))
