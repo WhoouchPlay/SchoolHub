@@ -19,7 +19,7 @@ def create_book(request: HttpRequest):
     if form.is_valid():
         book: Booking = form.save(commit=False)
         book.user = request.user
-        book.status = Status.objects.filter(name="Waiting")
+        book.status = Status.objects.filter(name="Waiting").first()
         book.save()
         messages.success(request, "Кабінет заброньовано. Очікуйте підтвердження від адміністратора.")
         return redirect("resource")
@@ -29,12 +29,13 @@ def create_book(request: HttpRequest):
 @has_permission("UB")
 @login_required
 def update_book(request: HttpRequest, id: int):
-    form = BookingFormAdmin(data=request.POST or None, instance=Booking.objects.get(pk=id))
+    book = Booking.objects.get(pk=id)
+    form = BookingFormAdmin(data=request.POST or None, instance=book)
     if form.is_valid():
         form.save()
         messages.success(request, "Інформацію оновлено")
         return redirect("resource")
-    return render(request, "booking_admin.html", dict(form=form))
+    return render(request, "booking_admin.html", dict(form=form, book=book))
 
 
 @has_permission("RB")
