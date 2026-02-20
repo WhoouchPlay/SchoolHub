@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpRequest
@@ -18,6 +20,20 @@ def create_book(request: HttpRequest):
     form = BookingFormUser(data=request.POST or None)
     if form.is_valid():
         book: Booking = form.save(commit=False)
+
+        if Booking.objects.filter(
+            resource=book.resource,
+            end_time__gt=book.start_time,
+            status=Status.objects.filter(name="Busy").first()
+        ).exists():
+            
+            messages.error(request, "Цей кабінет зайнятий.")
+            return redirect("resource")
+        
+        # if book.start_time < datetime.now() or book.end_time <= datetime.now():
+        #     messages.error(request, "Дата та час початку повинні бути не раніше поточних дати часу. Завершення не раніше поточних дати та часу.")
+        #     return redirect("resource")
+        
         book.user = request.user
         book.status = Status.objects.filter(name="Waiting").first()
         book.save()
