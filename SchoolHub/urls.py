@@ -26,4 +26,5 @@ urlpatterns = [
     path('booking/', include('Booking.urls')),
     path('resouce/', include('Resource.urls')),
     path('', include('Profile.urls')),
+    path("schedule/", include("TaskManager.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + debug_toolbar_urls()

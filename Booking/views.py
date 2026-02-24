@@ -9,7 +9,7 @@ from django.core.exceptions import PermissionDenied
 
 from .forms import BookingFormAdmin, BookingFormUser
 from Profile.models import Position, Action
-from .models import Booking, Status
+from .models import Booking, Status, Action as ActionLog, BookingLog
 from .permissions import has_permission
 # Create your views here.
 
@@ -37,6 +37,8 @@ def create_book(request: HttpRequest):
         book.user = request.user
         book.status = Status.objects.filter(name="Waiting").first()
         book.save()
+
+        BookingLog.objects.create(booking=book, user=request.user, action=ActionLog.objects.filter(name="Забронював(-ла)").first())
         messages.success(request, "Кабінет заброньовано. Очікуйте підтвердження від адміністратора.")
         return redirect("resource")
     return render(request, "booking_user.html", dict(form=form))
@@ -49,6 +51,8 @@ def update_book(request: HttpRequest, id: int):
     form = BookingFormAdmin(data=request.POST or None, instance=book)
     if form.is_valid():
         form.save()
+        name = "Підтвердив(-ла)" if form.cleaned_data["status"] == Status.objects.filter(name="Busy").first() else "Відхилив(-ла)"
+        BookingLog.objects.create(booking=book, user=request.user, action=ActionLog.objects.filter(name=name).first())
         messages.success(request, "Інформацію оновлено")
         return redirect("resource")
     return render(request, "booking_admin.html", dict(form=form, book=book))

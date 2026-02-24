@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Resource',
     'Profile',
     'debug_toolbar',
+    'TaskManager',
 ]
 
 MIDDLEWARE = [

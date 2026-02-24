@@ -9,6 +9,8 @@ class Action(models.Model):
         CREATEBOOKING = "CB", _("CreateBooking")
         READBOOKING = "RB", _("ReadBooking")
         UPDATEBOOKING = "UB", _("UpdateBooking")
+        CREATESCHEDULE = "CS", _("CreateSchedule")
+        READSCHEDULE = "RS", _("ReadSchedule")
         
     name = models.CharField(
         max_length=100,
@@ -40,7 +42,7 @@ class Subject(models.Model):
 class ClassRoom(models.Model):
     name = models.CharField(max_length=20, verbose_name="Назва класу")
     description = models.CharField(max_length=255, verbose_name="Опис класу", null=True, blank=True, default=None)
-    subjects = models.ManyToManyField(Subject, null=True, blank=True, default=None, verbose_name="Список предметів")
+    subjects = models.ManyToManyField(Subject, blank=True, default=None, verbose_name="Список предметів")
 
     def __str__(self):
         return f"{self.name} клас" 
@@ -48,7 +50,7 @@ class ClassRoom(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    positions = models.ManyToManyField(Position, null=True, blank=True, default=None)
+    positions = models.ManyToManyField(Position, blank=True, default=None)
     class_room = models.ForeignKey(ClassRoom, on_delete=models.CASCADE, null=True, default=None, blank=True)
     avatar = models.ImageField(upload_to=".", verbose_name="Аватарка", null=True, blank=True, default=None)
     bio = models.TextField(verbose_name="Біографія", null=True, blank=True, default=None)

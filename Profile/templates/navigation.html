@@ -18,8 +18,19 @@
     <a class="nav-link {% if url_name == 'resource' %} active {% endif %}" href="{% url 'resource' %}">Список бронювань</a>
 </li>
 {% endif %}
+{% if request.user|has_permission:"RS" %}
 <li class="nav-item">
-    <a class="nav-link {% if url_name == 'logout' %} active {% endif %}" href="{% url 'logout_view' %}">Вихід</a>
+    <a class="nav-link {% if url_name == 'schedule_view' %} active {% endif %}" href="{% url 'schedule_view' %}">Розклад</a>
+</li>
+{% endif %}
+{% if request.user|has_permission:"CS" %}
+<li class="nav-item">
+    <a class="nav-link {% if url_name == 'add_schedule' %} active {% endif %}" href="{% url 'add_schedule' %}">Додати заняття</a>
+</li>
+{% endif %}
+</li>
+<li class="nav-item">
+    <a class="nav-link {% if url_name == 'logout_view' %} active {% endif %}" href="{% url 'logout_view' %}">Вихід</a>
 </li>
 {% else %}
 <li class="nav-item">
