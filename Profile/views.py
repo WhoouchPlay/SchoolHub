@@ -15,7 +15,7 @@ from TaskManager.models import Schedule
 
 # Create your views here.
 
-locale.setlocale(locale.LC_ALL, 'ukrainian')
+locale.setlocale(locale.LC_ALL, 'uk_UA.utf8')
 
 def sign_up(request: HttpRequest):
     if request.method == "POST":
@@ -84,16 +84,16 @@ def update_profile(request: HttpRequest):
 
 @login_required
 def index(request: HttpRequest):
-    positions = Position.objects.filter(Q(name="Учень") | Q(name="Вчитель")).all()
     if (User
         .objects
         .prefetch_related("Profile")
         .prefetch_related("Position")
         .filter(username=request.user.username, profile__positions__name__in=["Учень", "Вчитель"])
         .exists()):
-        class_number = int(request.user.profile,class_room.name.split("-"[0]))
-        day = datetime.now().
-        task = Schedule.objects.filter()
+        class_number = int(request.user.profile.class_room.name.split("-")[0])
+        day = datetime.now().strftime("%A").title()
+        task = Schedule.objects.filter(day=day, study=class_number)
+        return render(request, "index.html", dict(task=task))
     return render(request, "index.html")
 
 
